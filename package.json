@@ -5,7 +5,7 @@
   "description": "Integration patterns for putting a language model behind a website: transport, failure, streaming, structured output, tool calls, trust boundary and cost ceiling. No dependencies, no API key needed to run the tests.",
   "type": "module",
   "scripts": {
-    "test": "node --test \"test/*.test.mjs\"",
+    "test": "node --test",
     "check": "node --check examples/express-proxy.mjs"
   }
 }
