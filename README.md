@@ -70,12 +70,24 @@ and the degraded path is the one nobody tests. See [docs/03](docs/03-failure-and
 | [02 Prompt injection](docs/02-prompt-injection.md) | Why prompt-level defences are mitigations rather than controls, what a real boundary looks like, and how retrieval widens it |
 | [03 Failure and cost](docs/03-failure-and-cost.md) | Retry policy, jitter, degradation, the two budget ceilings, the abort path, and why repair loops are bounded |
 
-## Running it
+## Verifying
 
 ```bash
-npm test          # 58 tests, no key, no network
-npm run check     # syntax-check the reference proxy
+npm test          # 58 tests, no API key, no network
+npm run check     # syntax-check the reference Express proxy
 ```
+
+Every test runs against a stub transport. That means the retry policy, both
+budget ceilings, the abort path, the streaming parser and the structured-output
+repair loop are all exercised without reaching a provider and without a key. A
+suite that needs a key is a suite nobody runs, and one that calls a live model is
+testing the model rather than the code.
+
+What the suite does not prove: that any given provider behaves the way the stub
+does. The module boundaries are drawn so that a provider revision is a change in
+one file, and `docs/01-server-proxy.md` says which.
+
+CI runs both commands on Node 22 on every push to `main`.
 
 ## Scope
 
