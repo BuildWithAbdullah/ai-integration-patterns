@@ -72,7 +72,7 @@ test('a schema violation triggers exactly one repair attempt', async () => {
   assert.equal(result.attempts, 2);
   assert.deepEqual(seen[0], [], 'the first attempt carries no repair context');
   assert.equal(seen[1][0].role, 'assistant');
-  assert.match(seen[1][1].content, /must be one of positive, neutral, negative/,
+  assert.match(seen[1][1].content, /must be one of "positive", "neutral", "negative"/,
     'the repair prompt must say what was actually wrong');
 });
 

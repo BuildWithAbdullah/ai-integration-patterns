@@ -109,16 +109,18 @@ test('definitions are derived from the registry, so an advertised tool exists', 
 });
 
 test('the validator covers the types it claims to', () => {
-  assert.throws(() => validate({ type: 'string', enum: ['a', 'b'] }, 'c'), /must be one of a, b/);
+  assert.throws(() => validate({ type: 'string', enum: ['a', 'b'] }, 'c'), /must be one of "a", "b"/);
   assert.throws(() => validate({ type: 'integer' }, 1.5), /must be an integer/);
   assert.throws(() => validate({ type: 'array', maxItems: 2 }, [1, 2, 3]), /at most 2 items/);
   assert.throws(() => validate({ type: 'object', required: ['a'] }, {}), /missing required property "a"/);
   assert.throws(() => validate({ type: 'boolean' }, 'true'), /must be a boolean/);
-  assert.throws(() => validate({ type: 'number' }, NaN), /must be a number/);
+  assert.throws(() => validate({ type: 'number' }, NaN), /must be a finite number/);
+  assert.throws(() => validate({ type: 'number' }, Infinity), /must be a finite number/);
+  assert.throws(() => validate({ type: 'null' }, 0), /must be null/);
   assert.doesNotThrow(() => validate({ type: 'array', items: { type: 'string' } }, ['a']));
 });
 
 test('nested paths are reported so the error says where', () => {
   const schema = { type: 'object', properties: { user: { type: 'object', properties: { age: { type: 'integer' } } } } };
-  assert.throws(() => validate(schema, { user: { age: 'old' } }), /arguments\.user\.age must be a number/);
+  assert.throws(() => validate(schema, { user: { age: 'old' } }), /arguments\.user\.age must be a finite number/);
 });
