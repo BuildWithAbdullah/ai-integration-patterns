@@ -50,6 +50,11 @@ jobs:
         with:
           node-version: '22'
       - name: regenerate and diff
+        # node directly, not `npm run`. npm prints its own two line banner to
+        # stdout, so redirecting `npm run catalogue` to a file captures the
+        # banner along with the output and the diff can never match. This
+        # passed locally because the script was run directly and failed in CI
+        # on the first run of this workflow.
         run: |
-          npm run catalogue > /tmp/failure-modes.md
+          node tools/list-findings.mjs > /tmp/failure-modes.md
           diff -u docs/05-failure-modes.md /tmp/failure-modes.md
