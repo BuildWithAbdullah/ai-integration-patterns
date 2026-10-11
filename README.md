@@ -160,7 +160,7 @@ revision is a change in one file, and `docs/01-server-proxy.md` says which.
 npm test          # 158 tests, no API key, no network
 npm run verify    # 487 assertions about the repository, and the suite again
 npm run check     # syntax-check the reference Express proxy
-npm run catalogue # regenerate docs/05-failure-modes.md from the catalogue
+npm run catalogue # regenerate docs/05-failure-modes.md (pipe with node, not npm run)
 ```
 
 `npm test` runs through `tools/run-tests.mjs`, which consumes the structured
