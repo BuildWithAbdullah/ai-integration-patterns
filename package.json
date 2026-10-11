@@ -1,11 +1,17 @@
 {
   "name": "ai-integration-patterns",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Integration patterns for putting a language model behind a website: transport, failure, streaming, structured output, tool calls, trust boundary and cost ceiling. No dependencies, no API key needed to run the tests.",
+  "description": "Integration patterns for putting a language model behind a website: transport, failure, streaming, structured output, tool calls, trust boundary and cost ceiling. No dependencies, no API key needed to run anything in it.",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "test": "node --test",
-    "check": "node --check examples/express-proxy.mjs"
-  }
+    "test": "node tools/run-tests.mjs",
+    "verify": "node tools/verify.mjs",
+    "check": "node --check examples/express-proxy.mjs",
+    "catalogue": "node tools/list-findings.mjs"
+  },
+  "license": "MIT"
 }
