@@ -7,12 +7,49 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  suite:
+    name: suite on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: tests
+        run: npm test
+      - name: repository assertions
+        run: npm run verify
+      - name: syntax check the reference proxy
+        run: npm run check
+
+  engine-floor:
+    # The declared floor is a promise that the package installs and runs there.
+    # Declaring a range the package cannot actually install on is a defect this
+    # account has shipped twice, in site-audit-cli and in technical-seo-toolkit,
+    # both times because the floor was guessed rather than read.
+    name: install on the declared floor with --engine-strict
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.0.0'
+      - run: npm install --engine-strict
+      - run: npm test
+
+  generated:
+    name: the generated catalogue matches its source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm test
-      - run: npm run check
+      - name: regenerate and diff
+        run: |
+          npm run catalogue > /tmp/failure-modes.md
+          diff -u docs/05-failure-modes.md /tmp/failure-modes.md
